@@ -6,10 +6,6 @@ yarn-error.log*
 .pnp/
 .pnp.js
 
-# Logs
-logs/
-*.log
-
 # Environment variables
 .env
 .env.local
@@ -17,35 +13,48 @@ logs/
 .env.test.local
 .env.production.local
 
+# Logs
+logs/
+*.log
+
 # Editor directories and files
 .vscode/
 .idea/
 .DS_Store
-*.sublime-project
-*.sublime-workspace
+Thumbs.db
 
-# Build artifacts
-# Client-side (React)
+# Client-side (React) specific ignores
+client/node_modules/
 client/build/
-client/dist/
+client/.env
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
 
-# Server-side (Node.js)
-# If the server has a build step (e.g., TypeScript compilation to JS)
-server/dist/
+# Server-side (Node.js) specific ignores
+server/node_modules/
+server/.env
+server/.env.local
+server/.env.development.local
+server/.env.test.local
+server/.env.production.local
+server/dist/ # If server code is transpiled to a 'dist' folder
 
 # Test coverage
 coverage/
-client/coverage/
-server/coverage/
+.nyc_output/
+
+# Dependency lock files (if not committed)
+# package-lock.json
+# yarn.lock
 
 # OS generated files
 .DS_Store
 .Trashes
 ehthumbs.db
-Thumbs.db
-
-# Misc
-*.tgz
-.npm/
-.eslintcache
-.prettiercache
+*.bak
+*.swp
+*~.nib
+*.sublime-project
+*.sublime-workspace

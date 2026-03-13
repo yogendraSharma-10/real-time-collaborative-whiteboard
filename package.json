@@ -1,0 +1,11 @@
+```json
+{
+  "name": "realtime-collaborative-whiteboard",
+  "version": "1.0.0",
+  "description": "A Real-time Collaborative Whiteboard system, enabling multiple authenticated users to draw and interact simultaneously within shared sessions. This service is designed to integrate with a larger microservice ecosystem, including a Collaborative Task Management System, Micro Social Media Dashboard, and Multi-vendor E-commerce Marketplace.",
+  "main": "server/index.js",
+  "private": true,
+  "scripts": {
+    "start": "npm run build && node server/index.js",
+    "server": "node server/index.js",
+    "server:dev": "nodemon server/index.js
