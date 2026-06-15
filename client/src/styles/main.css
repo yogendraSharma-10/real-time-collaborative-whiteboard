@@ -1,0 +1,422 @@
+/*
+ * client/src/styles/main.css
+ *
+ * Main stylesheet for the Real-time Collaborative Whiteboard application.
+ * Defines global styles, layout, component-specific styles, and utility classes.
+ *
+ * This stylesheet aims for a clean, modern, and functional design,
+ * suitable for a production-quality web application.
+ */
+
+/* --- 1. Global Styles & Resets --- */
+:root {
+    --primary-color: #007bff; /* Blue */
+    --secondary-color: #6c757d; /* Gray */
+    --accent-color: #28a745; /* Green */
+    --danger-color: #dc3545; /* Red */
+    --background-color: #f8f9fa; /* Light Gray */
+    --surface-color: #ffffff; /* White */
+    --border-color: #dee2e6; /* Lighter Gray */
+    --text-color: #343a40; /* Dark Gray */
+    --text-light-color: #6c757d; /* Medium Gray */
+    --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --header-height: 60px;
+    --sidebar-width: 250px;
+    --tool-palette-width: 60px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent body scroll, let specific components scroll if needed */
+}
+
+/* --- 2. Layout & App Structure --- */
+#root, .app-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+    height: 100vh; /* Ensure app takes full viewport height */
+}
+
+.app-header {
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-light);
+    height: var(--header-height);
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.app-header h1 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.app-header h1 svg {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.main-content-area {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden; /* Ensure content doesn't overflow its container */
+}
+
+.whiteboard-wrapper {
+    flex-grow: 1;
+    display: flex;
+    position: relative; /* For positioning tools */
+    background-color: #e9ecef; /* A slightly darker background for the canvas area */
+    overflow: hidden; /* Important for canvas panning/zooming */
+}
+
+/* --- 3. Whiteboard Canvas --- */
+.whiteboard-canvas-container {
+    position: absolute; /* Allows canvas to be positioned and scaled within its wrapper */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Crucial for canvas interaction */
+    cursor: grab; /* Default cursor for panning */
+}
+
+.whiteboard-canvas-container.drawing-mode {
+    cursor: crosshair;
+}
+
+.whiteboard-canvas-container.erasing-mode {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eraser"><path d="M14.4 14.4L9.6 9.6M18 6L12 12M6 18L12 12M12 12L18 18M6 6L12 12M12 12L6 18"/></svg>') 12 12, auto; /* Custom eraser cursor */
+}
+
+.whiteboard-canvas-container.moving-mode {
+    cursor: grabbing;
+}
+
+canvas {
+    display: block; /* Remove extra space below canvas */
+    touch-action: none; /* Disable default touch actions for custom handling */
+}
+
+/* --- 4. Tool Palette --- */
+.tool-palette {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100; /* Ensure tools are above canvas */
+    width: var(--tool-palette-width);
+    flex-shrink: 0;
+}
+
+.tool-palette button {
+    width: 48px;
+    height: 48px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-light-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    position: relative;
+}
+
+.tool-palette button:hover {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+}
+
+.tool-palette button.active {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+    border-color: var(--primary-color);
+}
+
+.tool-palette button.active:hover {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+}
+
+.tool-palette .tool-group {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tool-palette .tool-group:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/* --- 5. Color Picker --- */
+.color-picker-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    position: absolute;
+    left: calc(var(--tool-palette-width) + 1.5rem); /* Position next to tool palette */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 101;
+    max-width: 180px; /* Limit width for better layout */
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out, border-color 0.1s ease-in-out;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.active {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Custom input for more colors */
+.color-picker-container input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden; /* Hide default color input border */
+}
+
+.color-picker-container input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+.color-picker-container input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 50%;
+}
+
+/* --- 6. Sidebar (e.g., for Participants, Chat, Settings) --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--surface-color);
+    border-left: 1px solid var(--border-color);
+    box-shadow: var(--shadow-light);
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow-y: auto; /* Allow scrolling if content is long */
+}
+
+.sidebar h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.participant-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.participant-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.participant-list li:last-child {
+    border-bottom: none;
+}
+
+.participant-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color); /* Placeholder */
+    color: var(--surface-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* --- 7. Forms & Modals (Authentication, Session Management) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--surface-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.form-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* --- 8. Buttons --- */
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue */
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--surface-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Darker gray */
+    border-color: #5a6268;
+}
+
+.btn-outline-primary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--surface-color);
+}
+
+.
