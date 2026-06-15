@@ -1,26 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './styles/main.css'; // Global styles for the application
+import './styles/main.css'; // Import global styles
 
 /**
- * The main entry point for the React client-side application.
- * This file initializes the React root and renders the primary App component
- * into the DOM element specified in public/index.html.
+ * client/src/index.js
+ *
+ * This is the entry point for the React client-side application.
+ * It initializes the React application, renders the root component (`App`),
+ * and sets up global styling.
+ *
+ * Uses React 18's `createRoot` API for concurrent mode features.
  */
 
-// Get the root DOM element where the React application will be mounted.
-// This element is typically defined in public/index.html with id="root".
+// Find the root DOM element where the React application will be mounted.
+// This element is typically defined in public/index.html with an id of 'root'.
 const rootElement = document.getElementById('root');
 
 // Ensure the root element exists before attempting to render.
 if (rootElement) {
-  // Create a React root using ReactDOM.createRoot (for React 18+).
+  // Create a React root using ReactDOM.createRoot for React 18+.
   // This enables concurrent features and improved performance.
   const root = ReactDOM.createRoot(rootElement);
 
-  // Render the main App component into the root.
-  // React.StrictMode is used to highlight potential problems in an application.
+  // Render the main application component (`App`) inside React.StrictMode.
+  // React.StrictMode is a tool for highlighting potential problems in an application.
   // It activates additional checks and warnings for its descendants during development.
   root.render(
     <React.StrictMode>
@@ -29,5 +33,5 @@ if (rootElement) {
   );
 } else {
   // Log an error if the root element is not found, which would prevent the app from starting.
-  console.error('Failed to find the root element. Make sure an element with id="root" exists in index.html.');
+  console.error('Failed to find the root element. Make sure an element with id "root" exists in index.html.');
 }
