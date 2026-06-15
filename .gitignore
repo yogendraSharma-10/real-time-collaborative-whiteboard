@@ -1,0 +1,51 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/
+.idea/
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Build artifacts
+# Client-side (React)
+client/build/
+client/dist/
+
+# Server-side (Node.js)
+# If the server has a build step (e.g., TypeScript compilation to JS)
+server/dist/
+
+# Test coverage
+coverage/
+client/coverage/
+server/coverage/
+
+# OS generated files
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Misc
+*.tgz
+.npm/
+.eslintcache
+.prettiercache
